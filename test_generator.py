@@ -35,6 +35,10 @@ model = Model(inputs=model.input, outputs=top_model(model.output))
 for layer in model.layers[: 19]:
   layer.trainable = False
 
+# Two methods:
+# 1. Use sparse_categorial_crossentropy
+# 2. if using categorical_crossentropy:
+#      should use keras.utils.np_utils.to_categorical in generator to convert labels.
 model.compile(loss='categorical_crossentropy',
               optimizer=optimizers.SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
@@ -73,5 +77,6 @@ history = model.fit_generator(
     workers=1,
 )
 
+# Use multiple workers, should make sure threadsafe in generator.
 
 model.save_weights('csv_gen.h5')
